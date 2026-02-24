@@ -1,0 +1,1 @@
+<section class="container py-5"><h1 class="section-title">About Us</h1><p>Al Alameya is a trusted partner for infrastructure, MEP contracting, and strategic procurement services. We operate with strict quality standards, HSE excellence, and transparent project governance.</p></section>
