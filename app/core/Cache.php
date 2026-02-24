@@ -24,6 +24,7 @@ class Cache
             mkdir(dirname($path), 0755, true);
         }
         file_put_contents($path, serialize($data), LOCK_EX);
+        file_put_contents($path, serialize($data));
         return $data;
     }
 

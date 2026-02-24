@@ -6,6 +6,9 @@ return [
         'env' => 'production',
         'debug' => false,
         'timezone' => 'Africa/Cairo',
+        'cache_path' => __DIR__ . '/cache',
+        'uploads_url' => '/uploads/',
+        'uploads_path' => __DIR__ . '/public_html/uploads/',
     ],
     'db' => [
         'host' => 'sqlXXX.byetcluster.com',

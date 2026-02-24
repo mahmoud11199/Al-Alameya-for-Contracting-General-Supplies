@@ -38,6 +38,12 @@ function validateUpload(array $file): ?string {
         return null;
     }
 
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        return null;
+    }
+    if (($file['size'] ?? 0) > 2 * 1024 * 1024) {
+        return null;
+    }
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime = $finfo->file($file['tmp_name']);
     $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
