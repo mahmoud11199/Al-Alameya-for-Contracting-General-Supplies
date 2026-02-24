@@ -10,26 +10,28 @@ use App\Models\Setting;
 class PageController extends Controller
 {
     private ContentModel $content;
+    private array $config;
 
     public function __construct()
     {
         $this->content = new ContentModel();
+        $this->config = require dirname(__DIR__, 2) . '/.env.php';
     }
 
     private function siteData(string $title, string $description): array
     {
-        $settings = (new Setting())->allKeyed();
         return [
             'metaTitle' => $title,
             'metaDescription' => $description,
-            'settings' => $settings,
+            'settings' => (new Setting())->allKeyed(),
         ];
     }
 
     public function home(): void
     {
-        $projects = Cache::remember('home_projects', 300, fn () => $this->content->getAll('projects', 6));
-        $services = Cache::remember('home_services', 300, fn () => $this->content->getAll('services', 6));
+        $homeTtl = (int) ($this->config['performance']['cache_ttl_home'] ?? 180);
+        $projects = Cache::remember('home_projects', $homeTtl, fn () => $this->content->getAll('projects', 6));
+        $services = Cache::remember('home_services', $homeTtl, fn () => $this->content->getAll('services', 6));
         $this->view('pages/home', array_merge($this->siteData('Home', 'Leading contracting and general supplies solutions.'), compact('projects', 'services')));
     }
 
@@ -53,6 +55,14 @@ class PageController extends Controller
             exit('Invalid CSRF token');
         }
 
+        $limit = (int) ($this->config['security']['contact_rate_limit_seconds'] ?? 30);
+        $last = (int) ($_SESSION['contact_last_submit'] ?? 0);
+        if ($last > 0 && (time() - $last) < $limit) {
+            $_SESSION['flash'] = 'Please wait a few seconds before sending another message.';
+            header('Location: /contact');
+            return;
+        }
+
         $payload = [
             'name' => $this->sanitize($_POST['name'] ?? ''),
             'email' => filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL) ?: '',
@@ -63,6 +73,7 @@ class PageController extends Controller
 
         if ($payload['name'] && $payload['email'] && $payload['message']) {
             $this->content->saveMessage($payload);
+            $_SESSION['contact_last_submit'] = time();
             $_SESSION['flash'] = 'Your message has been sent successfully.';
         } else {
             $_SESSION['flash'] = 'Please complete all required fields.';

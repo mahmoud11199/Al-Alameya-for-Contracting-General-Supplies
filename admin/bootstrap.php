@@ -28,6 +28,16 @@ function adminLayoutEnd(): void {
 }
 
 function validateUpload(array $file): ?string {
+    $config = require dirname(__DIR__) . '/.env.php';
+    $maxSize = (int) ($config['performance']['max_upload_size_bytes'] ?? 1048576);
+
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        return null;
+    }
+    if (($file['size'] ?? 0) > $maxSize) {
+        return null;
+    }
+
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
         return null;
     }
@@ -40,6 +50,7 @@ function validateUpload(array $file): ?string {
     if (!isset($allowed[$mime])) {
         return null;
     }
+
     $name = bin2hex(random_bytes(16)) . '.' . $allowed[$mime];
     $target = dirname(__DIR__) . '/public_html/uploads/' . $name;
     if (!move_uploaded_file($file['tmp_name'], $target)) {

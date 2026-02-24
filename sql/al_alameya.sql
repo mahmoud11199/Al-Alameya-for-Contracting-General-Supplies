@@ -10,6 +10,7 @@ CREATE TABLE users (
   email VARCHAR(150) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_users_role_id (role_id),
   FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
@@ -28,7 +29,8 @@ CREATE TABLE projects (
   location VARCHAR(180) DEFAULT NULL,
   completed_at DATE DEFAULT NULL,
   image VARCHAR(255) DEFAULT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_projects_completed_at (completed_at)
 );
 
 CREATE TABLE blog_posts (
@@ -38,6 +40,8 @@ CREATE TABLE blog_posts (
   body TEXT NOT NULL,
   status ENUM('draft','published') DEFAULT 'draft',
   published_at DATETIME DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_blog_status_published (status, published_at)
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -48,6 +52,8 @@ CREATE TABLE messages (
   phone VARCHAR(50) DEFAULT NULL,
   subject VARCHAR(180) DEFAULT NULL,
   message TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_messages_created_at (created_at)
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

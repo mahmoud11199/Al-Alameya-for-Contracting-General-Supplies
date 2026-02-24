@@ -6,16 +6,24 @@ class Cache
     public static function remember(string $key, int $ttl, callable $callback)
     {
         $config = require dirname(__DIR__, 2) . '/.env.php';
-        $path = rtrim($config['app']['cache_path'], '/') . '/' . md5($key) . '.cache';
+        if (empty($config['performance']['cache_enabled'])) {
+            return $callback();
+        }
 
+        $path = rtrim($config['performance']['cache_path'], '/') . '/' . md5($key) . '.cache';
         if (file_exists($path) && (time() - filemtime($path) < $ttl)) {
-            return unserialize((string) file_get_contents($path));
+            $raw = (string) file_get_contents($path);
+            $data = @unserialize($raw);
+            if ($data !== false || $raw === serialize(false)) {
+                return $data;
+            }
         }
 
         $data = $callback();
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0755, true);
         }
+        file_put_contents($path, serialize($data), LOCK_EX);
         file_put_contents($path, serialize($data));
         return $data;
     }
@@ -23,7 +31,7 @@ class Cache
     public static function clear(): void
     {
         $config = require dirname(__DIR__, 2) . '/.env.php';
-        foreach (glob(rtrim($config['app']['cache_path'], '/') . '/*.cache') ?: [] as $file) {
+        foreach (glob(rtrim($config['performance']['cache_path'], '/') . '/*.cache') ?: [] as $file) {
             @unlink($file);
         }
     }
