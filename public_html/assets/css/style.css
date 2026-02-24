@@ -1,0 +1,11 @@
+:root{--navy:#091a3a;--gold:#c9a44c}
+body{font-family:Arial,sans-serif;background:#f8f9fa}
+.bg-navy{background:var(--navy)}
+.text-gold{color:var(--gold)}
+.btn-gold{background:var(--gold);color:#111;border:none}
+.btn-gold:hover{background:#b48f36;color:#fff}
+.hero{min-height:60vh;background:radial-gradient(circle at 20% 10%,#1a3568 0,#091a3a 55%,#061227 100%)}
+.section-title{color:var(--navy);font-weight:700;margin-bottom:1.5rem;position:relative}
+.section-title:after{content:'';display:block;width:80px;height:3px;background:var(--gold);margin-top:.4rem}
+.fade-in{animation:fadeIn .8s ease-in-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
