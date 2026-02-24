@@ -1,0 +1,11 @@
+:root{--navy:#091a3a;--gold:#c9a44c}
+body{font-family:Arial,sans-serif;background:#f8f9fa}
+.bg-navy{background:var(--navy)}
+.text-gold{color:var(--gold)}
+.btn-gold{background:var(--gold);color:#111;border:none}
+.btn-gold:hover{background:#b48f36;color:#fff}
+.hero{min-height:70vh;background:linear-gradient(rgba(9,26,58,.8),rgba(9,26,58,.8)),url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1600&auto=format&fit=crop') center/cover}
+.section-title{color:var(--navy);font-weight:700;margin-bottom:1.5rem;position:relative}
+.section-title:after{content:'';display:block;width:80px;height:3px;background:var(--gold);margin-top:.4rem}
+.fade-in{animation:fadeIn .8s ease-in-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}

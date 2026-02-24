@@ -1,0 +1,1 @@
+<section class="container py-5"><h1 class="section-title">Careers</h1><p>We hire project managers, procurement specialists, civil engineers, and HSE officers. Send your CV to <strong>careers@alameya.example</strong>.</p></section>
